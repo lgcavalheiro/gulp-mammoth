@@ -1,0 +1,29 @@
+{
+    "name": "gulp-mammoth",
+    "version": "0.0.1",
+    "description": "Gulp plugin that uses mammoth.js to convert word documents to html or markdown.",
+    "main": "src/index.js",
+    "scripts": {
+        "test": "nyc mocha test/*.test.js"
+    },
+    "keywords": [
+        "gulpplugin",
+        "mammoth",
+        "convert",
+        "docx",
+        "html",
+        "markdown"
+    ],
+    "author": "Lucas Cavalheiro <lg.cavalheiro@hotmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "mammoth": "^1.4.13",
+        "through2": "^4.0.2"
+    },
+    "devDependencies": {
+        "gulp": "^4.0.2",
+        "mocha": "^8.2.0",
+        "nyc": "^15.1.0",
+        "vinyl": "^2.2.1"
+    }
+}
