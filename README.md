@@ -4,4 +4,4 @@
 
 ---
 
-## Project under still construction, more TBD
+## Project still under construction, more TBD
