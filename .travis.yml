@@ -4,6 +4,6 @@ node_js:
     - "node"
 jobs:
     include:
-        - script: COVERALLS_FLAG_NAME=run-coveralls nyc npm run test && nyc report --reporter=text-lcov | coveralls
+        - script: COVERALLS_FLAG_NAME=run-coveralls npm run cover
 notifications:
     webhooks: https://coveralls.io/webhook
