@@ -1,5 +1,13 @@
+sudo: false
 language: node_js
 node_js:
-    - "12.0"
-    - "14.0"
-after_success: ./node_modules/.bin/coveralls --verbose < coverage/lcov.info
+  - "node"
+env:
+  global:
+    - COVERALLS_PARALLEL=true
+jobs:
+  include:
+    - script: COVERALLS_FLAG_NAME=test-1 make test-coveralls-1
+    - script: COVERALLS_FLAG_NAME=test-2 make test-coveralls-2
+notifications:
+  webhooks: https://coveralls.io/webhook
