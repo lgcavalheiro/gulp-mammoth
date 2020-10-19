@@ -5,7 +5,8 @@
     "main": "src/index.js",
     "scripts": {
         "test": "nyc mocha test/unit/*.test.js",
-        "tdd": "gulp"
+        "tdd": "gulp",
+        "mm": "mammoth test/data/nonEmpty.docx test.md --output-format=markdown"
     },
     "keywords": [
         "gulpplugin",
