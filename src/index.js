@@ -12,7 +12,13 @@ module.exports = {
                 );
                 if (messages.length == 0)
                     file.contents = Buffer.from(value.toString());
-                else file.contents = Buffer.from(messages);
+                else
+                    file.contents = Buffer.from(
+                        `${messages.map(m => {
+                            return `${m.type} : ${m.message}\n`;
+                        })}`
+                    );
+
                 file.extname = ".html";
                 callback(null, file);
             }

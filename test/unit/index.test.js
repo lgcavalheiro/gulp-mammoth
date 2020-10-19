@@ -74,4 +74,27 @@ describe("gulp-mammoth: ", () => {
         stream.write(testFile);
         stream.end();
     });
+
+    it("Should add any error messages to output file instead of actual text content", done => {
+        let input = path.resolve(__dirname, "../data/failure.docx");
+
+        stream.on("data", file => {
+            assert.strictEqual(
+                file.contents.toString(),
+                `warning : An unrecognised element was ignored: v:fill\n,warning : An unrecognised element was ignored: v:stroke\n,warning : Unrecognised paragraph style: 'Illustration' (Style ID: Illustration)\n`
+            );
+        });
+
+        stream.on("end", () => {
+            done();
+        });
+
+        let testFile = new Vinyl({
+            path: input,
+            contents: fs.createReadStream(input),
+        });
+
+        stream.write(testFile);
+        stream.end();
+    });
 });

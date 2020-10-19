@@ -12,12 +12,16 @@ watcher.on("change", function (path, stats) {
     exports.default();
 });
 
+watcher.on("error", function (e) {
+    console.error(e.stack);
+});
+
 function startTDD() {
     return gulp.src(["./test/unit/*.test.js"], { read: false }).pipe(
         mocha({
             debugBrk: DEBUG,
             R: "spec",
-            nyc: true
+            nyc: true,
         })
     );
 }
