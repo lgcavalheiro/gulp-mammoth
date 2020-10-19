@@ -1,7 +1,6 @@
 const gulp = require("gulp");
 const watch = gulp.watch;
 const series = gulp.series;
-const parallel = gulp.parallel;
 const mocha = require("gulp-spawn-mocha-nyc");
 
 const watcher = watch(["src/*.js", "test/unit/*.test.js"]);
@@ -13,6 +12,10 @@ watcher.on("change", function (path, stats) {
 });
 
 watcher.on("error", function (e) {
+    console.error(e.stack);
+});
+
+process.on("uncaughtException", function (e) {
     console.error(e.stack);
 });
 

@@ -2,6 +2,7 @@ const Vinyl = require("vinyl");
 const assert = require("assert");
 const path = require("path");
 const fs = require("fs");
+const should = require("should");
 
 const GM = require("../../src/index");
 
@@ -75,13 +76,13 @@ describe("gulp-mammoth: ", () => {
         stream.end();
     });
 
-    it("Should add any error messages to output file instead of actual text content", done => {
+    it("Should log any convertion warnings to console", done => {
         let input = path.resolve(__dirname, "../data/failure.docx");
 
         stream.on("data", file => {
             assert.strictEqual(
-                file.contents.toString(),
-                `warning : An unrecognised element was ignored: v:fill\n,warning : An unrecognised element was ignored: v:stroke\n,warning : Unrecognised paragraph style: 'Illustration' (Style ID: Illustration)\n`
+                file.contents.toString().includes("<p>TEXT TEST</p>"),
+                true
             );
         });
 
