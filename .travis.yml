@@ -1,9 +1,11 @@
 sudo: false
 language: node_js
 node_js:
-    - "node"
-jobs:
-    include:
-        - script: COVERALLS_FLAG_NAME=run-coveralls npm run cover
-notifications:
-    webhooks: https://coveralls.io/webhook
+    - "14"
+    - "12"
+    - "10"
+    - "8"
+    - "6"
+    - "4"
+after_script: 
+    -npm run coveralls
