@@ -5,19 +5,19 @@ const fs = require("fs");
 
 const gulpMammoth = require("../../src/index");
 
-describe("Html convertion tests: ", () => {
+describe("Markdown convertion tests: ", () => {
     let stream;
     let options = {
         styleMap: [
-            "p[style-name='Body Text'] => ol.roman-list > li:fresh",
+            "p[style-name='Body Text'] => ol > li:fresh",
             "p[style-name='Preformatted Text'] => p:fresh",
-            "r[style-name='Emphasis'] => i:fresh",
-            "r[style-name='Strong Emphasis'] => strong:fresh > i",
+            "r[style-name='Emphasis'] => em:fresh",
+            "r[style-name='Strong Emphasis'] => strong:fresh > em",
         ],
     };
 
     beforeEach(() => {
-        stream = gulpMammoth("html", options);
+        stream = gulpMammoth("md", options);
     });
 
     it("Should ignore file if its content is equal to null", done => {
@@ -58,13 +58,13 @@ describe("Html convertion tests: ", () => {
         stream.end();
     });
 
-    it("Should parse .docx to .html", done => {
+    it("Should parse .docx to .md", done => {
         let input = path.resolve(__dirname, "../data/nonEmpty.docx");
 
         stream.on("data", file => {
             assert.strictEqual(file.history.length, 2);
-            assert.strictEqual(file.extname, ".html");
-            assert.strictEqual(file.contents.toString(), "<p>This is</p><p>a non-empty</p><p>.docx file</p>");
+            assert.strictEqual(file.extname, ".md");
+            assert.strictEqual(file.contents.toString(), "This is\n\na non\\-empty\n\n\\.docx file\n\n");
         });
 
         stream.on("end", () => {
@@ -84,7 +84,7 @@ describe("Html convertion tests: ", () => {
         let input = path.resolve(__dirname, "../data/failure.docx");
 
         stream.on("data", file => {
-            assert.strictEqual(file.contents.toString().includes("<p>TEXT TEST</p>"), true);
+            assert.strictEqual(file.contents.toString().includes("TEXT TEST"), true);
         });
 
         stream.on("end", () => {
@@ -105,9 +105,9 @@ describe("Html convertion tests: ", () => {
 
         stream.on("data", file => {
             let contents = file.contents.toString();
-            assert.strictEqual(contents.includes(`<ol class="roman-list">`), true);
-            assert.strictEqual(contents.includes(`<strong><i>Donec ut nulla ligula</i></strong>`), true);
-            assert.strictEqual(contents.includes(`<i> Donec pellentesque</i>`), true);
+            assert.strictEqual(contents.includes("1. Roman list item 1"), true, "Error on assertion 1");
+            assert.strictEqual(contents.includes("__*Donec ut nulla ligula*__"), true, "Error on assertion 2");
+            assert.strictEqual(contents.includes("* Donec pellentesque*"), true, "Error on assertion 3");
         });
 
         stream.on("end", () => {

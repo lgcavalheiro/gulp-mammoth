@@ -5,7 +5,7 @@ const fs = require("fs");
 
 const gulpMammoth = require("../../src/index");
 
-describe("Index tests - gulp-mammoth: ", () => {
+describe("Index tests: ", () => {
     it("Should throw if first argument is invalid", done => {
         assert.throws(gulpMammoth.bind(null, "invalid-argument"), Error);
         done();
@@ -41,7 +41,7 @@ describe("Index tests - gulp-mammoth: ", () => {
         stream.on("data", file => {
             assert.strictEqual(file.history.length, 2);
             assert.strictEqual(file.extname, ".md");
-            assert.strictEqual(file.contents.toString(), `This is\n\na non\\-empty\n\n\\.docx file\n\n`);
+            assert.strictEqual(file.contents.toString(), "This is\n\na non\\-empty\n\n\\.docx file\n\n");
         });
 
         stream.on("end", () => {
