@@ -1,29 +1,25 @@
-//to be heavily modified for continuous tdd
-
-const gulp = require('gulp');
+const gulp = require("gulp");
+const watch = gulp.watch;
 const series = gulp.series;
 const parallel = gulp.parallel;
-const { mammoth } = require('./src/index');
+const mocha = require("gulp-spawn-mocha-nyc");
 
-var options = {
-    styleMap: [
-        "p[style-name='Section Title'] => h1:fresh",
-        "p[style-name='Subsection Title'] => h2:fresh",
-        "b => em",
-        "comment-reference => sup"
-    ]
-};
+const watcher = watch(["src/*.js", "test/unit/*.test.js"]);
+const DEBUG = process.env.NODE_ENV === "debug";
 
-async function testHtml() {
-    gulp.src('./input/*.docx')
-        .pipe(mammoth.docxToHtml(options))
-        .pipe(gulp.dest('./outHtml'))
+watcher.on("change", function (path, stats) {
+    console.log(`File ${path} was changed - Relaunching...`);
+    exports.default();
+});
+
+function startTDD() {
+    return gulp.src(["./test/unit/*.test.js"], { read: false }).pipe(
+        mocha({
+            debugBrk: DEBUG,
+            R: "spec",
+            nyc: true
+        })
+    );
 }
 
-async function testMarkdown() {
-    gulp.src('./input/*.docx')
-        .pipe(mammoth.docxToMarkdown(options))
-        .pipe(gulp.dest('./outMd'))
-}
-
-module.exports.default = parallel(testHtml, testMarkdown)
+module.exports.default = series(startTDD);
