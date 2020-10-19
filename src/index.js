@@ -5,14 +5,11 @@ const PluginError = require("plugin-error");
 const PLUGIN_NAME = "gulp-mammoth";
 
 module.exports = {
-    docxToHtml(...options) {
-        return through.obj(async (file, encoding, callback, options) => {
+    docxToHtml(options) {
+        return through.obj(async (file, encoding, callback) => {
             if (file.contents === null) callback(null, file);
             else {
-                let { value, messages } = await mammoth.convertToHtml(
-                    { path: file.path },
-                    options
-                );
+                let { value, messages } = await mammoth.convertToHtml({ path: file.path }, options);
                 file.contents = Buffer.from(value.toString());
                 if (messages.length > 0)
                     console.warn(

@@ -2,15 +2,21 @@ const Vinyl = require("vinyl");
 const assert = require("assert");
 const path = require("path");
 const fs = require("fs");
-const should = require("should");
 
 const GM = require("../../src/index");
 
 describe("gulp-mammoth: ", () => {
     let stream;
-
+    let options = {
+        styleMap: [
+            "p[style-name='Body Text'] => ol.roman-list > li:fresh",
+            "p[style-name='Preformatted Text'] => p:fresh",
+            "r[style-name='Emphasis'] => i:fresh",
+            "r[style-name='Strong Emphasis'] => strong:fresh > i",
+        ],
+    };
     beforeEach(() => {
-        stream = GM.docxToHtml();
+        stream = GM.docxToHtml(options);
     });
 
     it("Should ignore file if its content is equal to null", done => {
@@ -57,10 +63,7 @@ describe("gulp-mammoth: ", () => {
         stream.on("data", file => {
             assert.strictEqual(file.history.length, 2);
             assert.strictEqual(file.extname, ".html");
-            assert.strictEqual(
-                file.contents.toString(),
-                "<p>This is</p><p>a non-empty</p><p>.docx file</p>"
-            );
+            assert.strictEqual(file.contents.toString(), "<p>This is</p><p>a non-empty</p><p>.docx file</p>");
         });
 
         stream.on("end", () => {
@@ -80,10 +83,7 @@ describe("gulp-mammoth: ", () => {
         let input = path.resolve(__dirname, "../data/failure.docx");
 
         stream.on("data", file => {
-            assert.strictEqual(
-                file.contents.toString().includes("<p>TEXT TEST</p>"),
-                true
-            );
+            assert.strictEqual(file.contents.toString().includes("<p>TEXT TEST</p>"), true);
         });
 
         stream.on("end", () => {
@@ -93,6 +93,29 @@ describe("gulp-mammoth: ", () => {
         let testFile = new Vinyl({
             path: input,
             contents: fs.createReadStream(input),
+        });
+
+        stream.write(testFile);
+        stream.end();
+    });
+
+    it("Should apply styleMaps properly", done => {
+        let input = path.resolve(__dirname, "../data/styleMap.docx");
+
+        stream.on("data", file => {
+            let contents = file.contents.toString();
+            assert.strictEqual(contents.includes(`<ol class="roman-list">`), true);
+            assert.strictEqual(contents.includes(`<strong><i>Donec ut nulla ligula</i></strong>`), true);
+            assert.strictEqual(contents.includes(`<i> Donec pellentesque</i>`), true);
+        });
+
+        stream.on("end", () => {
+            done();
+        });
+
+        let testFile = new Vinyl({
+            path: input,
+            contents: fs.readFileSync(input),
         });
 
         stream.write(testFile);
