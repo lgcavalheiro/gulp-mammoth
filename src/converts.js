@@ -34,4 +34,13 @@ module.exports = {
             callback(null, file);
         });
     },
+    txt() {
+        return through.obj(async (file, encoding, callback) => {
+            let { value, messages } = await mammoth.extractRawText({ path: file.path });
+            if (messages.length == 0) file.contents = Buffer.from(value.toString());
+            else file.contents = Buffer.from(messages);
+            file.extname = ".txt";
+            callback(null, file);
+        });
+    },
 };
