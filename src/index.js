@@ -19,7 +19,10 @@ const convertLiterals = {
         return through.obj(async (file, encoding, callback) => {
             if (file.contents === null) callback(null, file);
             else {
-                let { value, messages } = await mammoth.convertToMarkdown({ path: file.path }, options);
+                let { value, messages } = await mammoth.convertToMarkdown(
+                    { path: file.path },
+                    options
+                );
                 file = handleFileContents(file, ".md", value, messages);
                 callback(null, file);
             }
@@ -57,6 +60,7 @@ function handleFileContents(file, ext, value, messages) {
 }
 
 module.exports = function (convertTo, options) {
-    if (!convertLiterals[convertTo.toLowerCase()]) throw new PluginError(PLUGIN_NAME, "Invalid convertion format.");
+    if (!convertLiterals[convertTo.toLowerCase()])
+        throw new PluginError(PLUGIN_NAME, "Invalid convertion format.");
     else return convertLiterals[convertTo.toLowerCase()](options);
 };
