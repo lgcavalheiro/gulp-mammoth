@@ -1,11 +1,10 @@
 {
     "name": "gulp-mammoth",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "Gulp plugin that uses mammoth.js to convert word documents to html or markdown.",
     "main": "src/index.js",
     "scripts": {
         "test": "nyc mocha test/unit/*.test.js",
-        "tdd": "gulp",
         "coveralls": "nyc report --reporter=text-lcov | coveralls"
     },
     "keywords": [
